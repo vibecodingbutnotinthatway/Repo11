@@ -78,3 +78,35 @@ choicegridconversion <- function(x){ #This is coding the different likert-like g
         return(NULL)
     }
 }
+checkboxscore <- function(x){
+    if(x=="Impairment in interpersonal relationships"){
+        return(1)
+    }
+    if(x=="Tendency towards manipulative behaviour, conscious or not"){
+        return(1)
+    }
+    if(x=="Impairment in emotional stability and self-regulation, suppressive or overt"){
+        return(1)
+    }
+    if(x=="Impairment in understanding of social norms"){
+        return(1)
+    }
+    if(x=="Aggressive tenendies"){
+        return(1)
+    }
+    if(x=="Passive tendencies"){
+        return(1)
+    }
+    if(x=="Unusual stubbornness of beliefs"){
+        return(1)
+    }
+    if(x=="Unusual weakness of beliefs"){
+        return(1)
+    }
+    if(x=="None of the above"){
+        return(-8)
+    }
+    if(x=="NA"){
+        return(NULL)
+    }   
+}
