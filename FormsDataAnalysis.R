@@ -78,7 +78,7 @@ choicegridconversion <- function(x){ #This is coding the different likert-like g
         return(NULL)
     }
 }
-checkboxscore <- function(x){
+checkboxgeneralscore <- function(x){
     if(x=="Impairment in interpersonal relationships"){
         return(1)
     }
