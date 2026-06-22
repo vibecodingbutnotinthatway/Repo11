@@ -6,7 +6,7 @@ library(metricminer)
 #answerframe <- as.data.frame(form_id[3])
 #answerframe <- answerframe[!duplicated(answerframe),]
 
-timecode <- function(x){ #This is coding the different responses to the "How long do you use X social media" question as the minimum numbers, exluding less than 1
+socialmedia1 <- function(x){ #This is coding the different responses to the "How long do you use X social media" question as the minimum numbers, exluding less than 1
     if(x=="Dont Use"){
         return(0)
     }
@@ -35,7 +35,7 @@ timecode <- function(x){ #This is coding the different responses to the "How lon
         return(NULL)
     }
 }
-watchcode <- function(x){ #This is coding the different responses to the "How often do you watch" question as numbers
+socialmedia2 <- function(x){ #This is coding the different responses to the "How often do you watch" question as numbers
     if(x=="Haven't Seen"){
         return(0)
     }
@@ -55,6 +55,30 @@ watchcode <- function(x){ #This is coding the different responses to the "How of
         return(NULL)
     }    
 }
+socialmedia6 <- function(x){#This one is scoring the "how often do you watch from credible source" question
+    if(x=="Always"){
+        return(5)
+    }
+    if(x=="Often"){
+        return(4)
+    }
+    if(x=="Sometimes"){
+        return(3)
+    }
+    if(x=="Rarely"){
+        return(2)
+    }
+    if(x=="Never"){
+        return(1)
+    }
+    if(x=="Dont Know"){
+        return(0)
+    }
+    if(x=="NA"){
+        return(NULL)
+    }    
+}
+#Below is a choice grid coversion for the associations section. 
 choicegridconversion <- function(x){ #This is coding the different likert-like grid responses from the multipule choice grids into number format
     if(x=="Strongly Negative" || x=="Fully Disagree"){
         return(-2) #Ive gone with a negative to positive scale here to represenet that the beleifs are directed. They arent incremental 0 to n but on a continum -a to a
@@ -78,7 +102,33 @@ choicegridconversion <- function(x){ #This is coding the different likert-like g
         return(NULL)
     }
 }
-checkboxgeneralscore <- function(x){
+**## Not run:**
+associations3 <- function(x){#The values for this one are difficult, these will be decided post interviews
+    if(x=="More Likely to do drugs"){
+        return()
+    }
+    if(x=="More Violent"){
+        return()
+    }
+    if(x=="Are able to self manage without therapy"){
+        return()
+    }
+    if(x=="Complete tasks at a higher quality than others"){
+        return()
+    }
+    if(x=="Are more book smart"){
+        return()
+    }
+    if(x=="Are less street smart"){
+        return()
+    }
+    if(x=="NA"){
+        return(NULL)
+    }       
+}
+## End(**Not run**)
+
+definitions3 <- function(x){
     if(x=="Impairment in interpersonal relationships"){
         return(1)
     }
@@ -109,4 +159,16 @@ checkboxgeneralscore <- function(x){
     if(x=="NA"){
         return(NULL)
     }   
+}
+
+
+#The below are codings for the multipule choice recognition questions into a bernoulli format. 
+recognition4 <- function(x){
+    ifelse(x=="A) Bipolar Disorder", return(1), return(0))#Uses the ifelse function to quickly encode it. 
+}
+recognition2 <- function(x){
+    ifelse(x=="A) Borderline Personality Disorder",return(1),return(0)) 
+}
+recognition5 <- function(x){
+    ifelse(x=="A) The patient sufficiently meets the criteria for a personality disorder", return(1), return(0))
 }
