@@ -162,13 +162,7 @@ definitions3 <- function(x){
 }
 
 
-#The below are codings for the multipule choice recognition questions into a bernoulli format. 
-recognition4 <- function(x){
-    ifelse(x=="A) Bipolar Disorder", return(1), return(0))#Uses the ifelse function to quickly encode it. 
-}
-recognition2 <- function(x){
-    ifelse(x=="A) Borderline Personality Disorder",return(1),return(0)) 
-}
-recognition5 <- function(x){
-    ifelse(x=="A) The patient sufficiently meets the criteria for a personality disorder", return(1), return(0))
-}
+#The below are codings for the multipule choice recognition questions into a bernoulli format using the ifelse function. 
+recognition4 <- function(x){ ifelse(x=="A) Bipolar Disorder", return(1), return(0)) }
+recognition2 <- function(x){ ifelse(x=="A) Borderline Personality Disorder",return(1),return(0)) }
+recognition5 <- function(x){ ifelse(x=="A) The patient sufficiently meets the criteria for a personality disorder", return(1), return(0)) }
