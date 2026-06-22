@@ -104,22 +104,22 @@ choicegridconversion <- function(x){ #This is coding the different likert-like g
 }
 **## Not run:**
 associations3 <- function(x){#The values for this one are difficult, these will be decided post interviews
-    if(x=="More Likely to do drugs"){
+    if(grepl("More Likely to do drugs",x, fixed=TRUE)){
         return()
     }
-    if(x=="More Violent"){
+    if(grepl("More Violent",x, fixed=TRUE)){
         return()
     }
-    if(x=="Are able to self manage without therapy"){
+    if(grepl("Are able to self manage without therapy",x, fixed=TRUE)){
         return()
     }
-    if(x=="Complete tasks at a higher quality than others"){
+    if(grepl("Complete tasks at a higher quality than others",x, fixed=TRUE)){
         return()
     }
-    if(x=="Are more book smart"){
+    if(grepl("Are more book smart",x, fixed=TRUE){
         return()
     }
-    if(x=="Are less street smart"){
+    if(grepl("Are less street smart",x, fixed=TRUE){
         return()
     }
     if(x=="NA"){
@@ -129,36 +129,38 @@ associations3 <- function(x){#The values for this one are difficult, these will 
 ## End(**Not run**)
 
 definitions3 <- function(x){
-    if(x=="Impairment in interpersonal relationships"){
-        return(1)
+    a <- 0
+    if(grepl("Impairment in interpersonal relationships",x, fixed=TRUE)){
+       a<- a+1
     }
-    if(x=="Tendency towards manipulative behaviour, conscious or not"){
-        return(1)
+    if(grepl("Tendency towards manipulative behaviour, conscious or not",x, fixed=TRUE)){
+       a <- a+1
     }
-    if(x=="Impairment in emotional stability and self-regulation, suppressive or overt"){
-        return(1)
+    if(grepl("Impairment in emotional stability and self-regulation, suppressive or overt",x,fixed=TRUE)){
+       a <- a+1
     }
-    if(x=="Impairment in understanding of social norms"){
-        return(1)
+    if(grepl("Impairment in understanding of social norms",x, fixed=TRUE)){
+       a <- a+1
     }
-    if(x=="Aggressive tenendies"){
-        return(1)
+    if(grepl("Aggressive tenendies",x, fixed=TRUE)){
+      a <- a+1
     }
-    if(x=="Passive tendencies"){
-        return(1)
+    if(grepl("Passive tendencies",x, fixed=TRUE){
+      a <- a+1
     }
-    if(x=="Unusual stubbornness of beliefs"){
-        return(1)
+    if(grepl("Unusual stubbornness of beliefs",x, fixed=TRUE)){
+      a <- a+1
     }
-    if(x=="Unusual weakness of beliefs"){
-        return(1)
+    if(grepl("Unusual weakness of beliefs",x, fixed=TRUE)){
+      a <- a+1
     }
-    if(x=="None of the above"){
-        return(-8)
+    if(grepl("None of the above",x, fixed=TRUE)){
+      a <- a-8
     }
+    ifelse(a<=0, return(0), return(a))
     if(x=="NA"){
         return(NULL)
-    }   
+    }
 }
 
 
