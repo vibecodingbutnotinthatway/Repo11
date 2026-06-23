@@ -1,11 +1,7 @@
-library(metricminer)
-
-#form_url <- "https://docs.google.com/forms/d/1pPj2aLG7cvf77rKW6d2sEmTrvdJFalXZSVVleWkBb5M/edit"
-#form_id <- get_google_form(form_url)
-#class(form_id)
-#answerframe <- as.data.frame(form_id[3])
-#answerframe <- answerframe[!duplicated(answerframe),]
-
+library(tidyverse)
+library(googlesheets4)
+sheetsdata <- read_sheet("1m2Huoym89SjV3SWrwcSDaMXvvdPuNLFPDQUn79uHEu4")
+sheetsdata
 socialmedia1 <- function(x){ #This is coding the different responses to the "How long do you use X social media" question as the minimum numbers, exluding less than 1
     if(x=="Dont Use"){
         return(0)
@@ -98,73 +94,48 @@ choicegridconversion <- function(x){ #This is coding the different likert-like g
     if(x=="Mixed/Unsure" || x=="Mixed"){ #This value is annoying, it doesnt fit into a typical number schema. And it is meaningfully different from Neutral
         return(NULL)
     }
-    if(x=="NA"){
-        return(NULL)
-    }
+
 }
-**## Not run:**
-associations3 <- function(x){#The values for this one are difficult, these will be decided post interviews
-    if(grepl("More Likely to do drugs",x, fixed=TRUE)){
-        return()
-    }
-    if(grepl("More Violent",x, fixed=TRUE)){
-        return()
-    }
-    if(grepl("Are able to self manage without therapy",x, fixed=TRUE)){
-        return()
-    }
-    if(grepl("Complete tasks at a higher quality than others",x, fixed=TRUE)){
-        return()
-    }
-    if(grepl("Are more book smart",x, fixed=TRUE){
-        return()
-    }
-    if(grepl("Are less street smart",x, fixed=TRUE){
-        return()
-    }
-    if(x=="NA"){
-        return(NULL)
-    }       
+
+associations3a <- function(x){#The values for this one are difficult, these will be decided post interviews
+    a <- grepl("More Likely to do drugs",x, fixed=TRUE)
+    b <- grepl("More Violent",x, fixed=TRUE)
+    c <- grepl("Are able to self manage without therapy",x, fixed=TRUE)
+    d <- grepl("Complete tasks at a higher quality than others",x, fixed=TRUE)
+    e <- grepl("Are more book smart",x, fixed=TRUE)
+    f <- grepl("Are less street smart",x, fixed=TRUE)
+    coolvector <- c(a,b,c,d,e,f)
+    if( a || b || c || d || e || f){
+        return(sum(coolvector, na.rm=TRUE))
+    } 
 }
-## End(**Not run**)
 
 definitions3 <- function(x){
-    a <- 0
-    if(grepl("Impairment in interpersonal relationships",x, fixed=TRUE)){
-       a<- a+1
-    }
-    if(grepl("Tendency towards manipulative behaviour, conscious or not",x, fixed=TRUE)){
-       a <- a+1
-    }
-    if(grepl("Impairment in emotional stability and self-regulation, suppressive or overt",x,fixed=TRUE)){
-       a <- a+1
-    }
-    if(grepl("Impairment in understanding of social norms",x, fixed=TRUE)){
-       a <- a+1
-    }
-    if(grepl("Aggressive tenendies",x, fixed=TRUE)){
-      a <- a+1
-    }
-    if(grepl("Passive tendencies",x, fixed=TRUE){
-      a <- a+1
-    }
-    if(grepl("Unusual stubbornness of beliefs",x, fixed=TRUE)){
-      a <- a+1
-    }
-    if(grepl("Unusual weakness of beliefs",x, fixed=TRUE)){
-      a <- a+1
-    }
-    if(grepl("None of the above",x, fixed=TRUE)){
-      a <- a-8
-    }
-    ifelse(a<=0, return(0), return(a))
-    if(x=="NA"){
-        return(NULL)
+    a <- grepl("Impairment in interpersonal relationships",x, fixed=TRUE)
+    b <- grepl("Tendency towards manipulative behaviour, conscious or not",x, fixed=TRUE)
+    c <- grepl("Impairment in emotional stability and self-regulation, suppressive or overt",x,fixed=TRUE)
+    d <- grepl("Aggressive tenendies",x, fixed=TRUE)
+    e <- grepl("Passive tendencies",x, fixed=TRUE)
+    f <- grepl("Unusual stubbornness of beliefs",x, fixed=TRUE)
+    g <- grepl("Unusual weakness of beliefs",x, fixed=TRUE)
+    h <- grepl("None of the above",x, fixed=TRUE)
+    coolvector <- c(a,b,c,d,e,f,g,h)
+    if( a || b || c || d || e || f || g || h){
+        return(sum(coolvector, na.rm=TRUE))
     }
 }
 
 
-#The below are codings for the multipule choice recognition questions into a bernoulli format using the ifelse function. 
-recognition4 <- function(x){ ifelse(x=="A) Bipolar Disorder", return(1), return(0)) }
+#The below are codings for the multipule choice recognition questions into a bernoulli format 
+recognition4 <- function(x){ 
+  if(x=="A) Bipolar Disorder"){return(1)} 
+  if(x=="" || x=="" || x==""){return(0)}
+}
 recognition2 <- function(x){ ifelse(x=="A) Borderline Personality Disorder",return(1),return(0)) }
 recognition5 <- function(x){ ifelse(x=="A) The patient sufficiently meets the criteria for a personality disorder", return(1), return(0)) }
+
+#Below ive gathered them all into one function so I can pass it over every element in the tibble
+groupana <- function(x){
+    p <- list(choicegridconversion(x),associations3a(x), definitions3(x), recognition2(x),recognition4(x),recognition5(x),socialmedia1(x),socialmedia2(x),socialmedia6(x))
+    return(p)
+}
