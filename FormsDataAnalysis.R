@@ -122,14 +122,15 @@ definitions3 <- function(x){
     coolvector <- c(a,b,c,d,e,f,g,h)
     if( a || b || c || d || e || f || g || h){
         return(sum(coolvector, na.rm=TRUE))
-    }
+    }else{return(NULL)}
 }
 
 
 #The below are codings for the multipule choice recognition questions into a bernoulli format 
 recognition4 <- function(x){ 
-  if(x=="A) Bipolar Disorder"){return(1)} 
-  if(x=="" || x=="" || x==""){return(0)}
+    if(x=="A) Bipolar Disorder"){return(1)} 
+    if(x=="" || x=="" || x==""){return(0)}
+    if(!(x=="" || x=="" || x=="" || x=="A) Bipolar Disorder")){return(NULL)}
 }
 recognition2 <- function(x){ ifelse(x=="A) Borderline Personality Disorder",return(1),return(0)) }
 recognition5 <- function(x){ ifelse(x=="A) The patient sufficiently meets the criteria for a personality disorder", return(1), return(0)) }
