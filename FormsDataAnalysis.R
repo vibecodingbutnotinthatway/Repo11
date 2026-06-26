@@ -129,14 +129,22 @@ definitions3 <- function(x){
 #The below are codings for the multipule choice recognition questions into a bernoulli format 
 recognition4 <- function(x){ 
     if(x=="A) Bipolar Disorder"){return(1)} 
-    if(x=="" || x=="" || x==""){return(0)}
-    if(!(x=="" || x=="" || x=="" || x=="A) Bipolar Disorder")){return(NULL)}
+    if(x=="B) A Personality Disorder" || x=="C) A Neurological Disorder" || x=="D) None of the above"){return(0)}
+    if(!(x=="NA")){return(NULL)}
 }
-recognition2 <- function(x){ ifelse(x=="A) Borderline Personality Disorder",return(1),return(0)) }
-recognition5 <- function(x){ ifelse(x=="A) The patient sufficiently meets the criteria for a personality disorder", return(1), return(0)) }
+recognition2 <- function(x){
+    if(x=="A) Borderline Personality Disorder"){return(1)}
+    if(x=="B) Narcissistic Personality Disorder" || x=="C) A different, or generalised, Personality Disorder" || x=="D) None of the above"){return(0)}
+    if(x=="NA"){return(NULL)}
+}
+recognition5 <- function(x){
+    if(x=="A) The patient sufficiently meets the criteria for a personality disorder"){return(1)}
+    if(x=="B) The patient's symptoms are due to external factors, like workplace stressr" || x=="C) The patient has suffered from a stroke prior to the development of behaviours and was left untreated" || x=="D) The patient was brought up differently and these findings are based on their families belifs"){return(0)}
+    if(x=="NA"){return(NULL)}    
+}
 
 #Below ive gathered them all into one function so I can pass it over every element in the tibble
-groupana <- function(x){
+listana <- function(x){
     p <- list(choicegridconversion(x),associations3a(x), definitions3(x), recognition2(x),recognition4(x),recognition5(x),socialmedia1(x),socialmedia2(x),socialmedia6(x))
     return(p)
 }
