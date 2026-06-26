@@ -27,9 +27,7 @@ socialmedia1 <- function(x){ #This is coding the different responses to the "How
     if(x=="Atleast 10 hours"){
         return(10)
     }
-    if(x=="NA"){
-        return(NULL)
-    }
+    #if(x=="NA"){return(NULL)}
 }
 socialmedia2 <- function(x){ #This is coding the different responses to the "How often do you watch" question as numbers
     if(x=="Haven't Seen"){
@@ -47,9 +45,7 @@ socialmedia2 <- function(x){ #This is coding the different responses to the "How
     if(x=="Watch frequently"){
         return(4)
     }
-    if(x=="NA"){
-        return(NULL)
-    }    
+    #if(x=="NA"){return(NULL)}    
 }
 socialmedia6 <- function(x){#This one is scoring the "how often do you watch from credible source" question
     if(x=="Always"){
@@ -70,9 +66,7 @@ socialmedia6 <- function(x){#This one is scoring the "how often do you watch fro
     if(x=="Dont Know"){
         return(0)
     }
-    if(x=="NA"){
-        return(NULL)
-    }    
+    #if(x=="NA"){return(NULL)}    
 }
 #Below is a choice grid coversion for the associations section. 
 choicegridconversion <- function(x){ #This is coding the different likert-like grid responses from the multipule choice grids into number format
@@ -122,7 +116,7 @@ definitions3 <- function(x){
     coolvector <- c(a,b,c,d,e,f,g,h)
     if( a || b || c || d || e || f || g || h){
         return(sum(coolvector, na.rm=TRUE))
-    }else{return(NULL)}
+    }#else{return(NULL)}
 }
 
 
@@ -130,17 +124,17 @@ definitions3 <- function(x){
 recognition4 <- function(x){ 
     if(x=="A) Bipolar Disorder"){return(1)} 
     if(x=="B) A Personality Disorder" || x=="C) A Neurological Disorder" || x=="D) None of the above"){return(0)}
-    if(!(x=="NA")){return(NULL)}
+    #if(!(x=="A) Bipolar Disorder" || x=="B) A Personality Disorder" || x=="C) A Neurological Disorder" || x=="D) None of the above")){return(0)}
 }
 recognition2 <- function(x){
     if(x=="A) Borderline Personality Disorder"){return(1)}
     if(x=="B) Narcissistic Personality Disorder" || x=="C) A different, or generalised, Personality Disorder" || x=="D) None of the above"){return(0)}
-    if(x=="NA"){return(NULL)}
+    #if(!(x=="A) Borderline Personality Disorder" || x=="B) Narcissistic Personality Disorder" || x=="C) A different, or generalised, Personality Disorder" || x=="D) None of the above")){return(0)}
 }
 recognition5 <- function(x){
     if(x=="A) The patient sufficiently meets the criteria for a personality disorder"){return(1)}
     if(x=="B) The patient's symptoms are due to external factors, like workplace stressr" || x=="C) The patient has suffered from a stroke prior to the development of behaviours and was left untreated" || x=="D) The patient was brought up differently and these findings are based on their families belifs"){return(0)}
-    if(x=="NA"){return(NULL)}    
+    #if(!( x=="A) The patient sufficiently meets the criteria for a personality disorder" || x=="B) The patient's symptoms are due to external factors, like workplace stressr" || x=="C) The patient has suffered from a stroke prior to the development of behaviours and was left untreated" || x=="D) The patient was brought up differently and these findings are based on their families belifs")){return(0)}
 }
 
 #Below ive gathered them all into one function so I can pass it over every element in the tibble
