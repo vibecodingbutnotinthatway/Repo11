@@ -80,34 +80,70 @@ Based on this, which of the below best describes the patient:",
 The categories for different personality disorders (e.g. borderline personality disorder, avoidant personality disorder) is a valid diagnosis.',
   'PDTraitsCheckbox' = 'A person with a personality disorder may exhibit which of the following traits:'
 )
-
-updateModedUT <- function(){
-  UTModRule <- function(x){
-    x |> replace_values(
-      "Dont Use" ~ "0",
-      "Less than 1 hour" ~ "0.5",
-      "Less than 3 hours" ~ "1",
-      "Less than 5 hours" ~ "3",
-      "Less than 7 hours" ~ "5",
-      "Less than 9 hours" ~ "7",
-      "Less than 10 hours" ~ "9",
-      "Atleast 10 hours" ~ "10"
+#Mod Rules list
+UTModRule <- function(x){
+  x |> replace_values(
+    "Dont Use" ~ "0",
+    "Less than 1 hour" ~ "0.5",
+    "Less than 3 hours" ~ "1",
+    "Less than 5 hours" ~ "3",
+    "Less than 7 hours" ~ "5",
+    "Less than 9 hours" ~ "7",
+    "Less than 10 hours" ~ "9",
+    "Atleast 10 hours" ~ "10"
+  ) |> as.numeric()
+}
+WFQModRule <- function(x){
+  x |> replace_values(
+      "Haven't Seen" ~ "0",
+      "Have been recomended but havent seen" ~ "1",
+      "Have seen" ~ "2",
+      "Watch Occasionally" ~ "3",
+      "Watch frequently" ~ "4"
     ) |> as.numeric()
   }
-  ModedUT <<- sheetsdata |> mutate(across(starts_with("UT"), UTModRule))
+ChoiceGridModRuleA <- function(x){
+  x |> replace_values(
+      "Strongly Negative" ~ "-2",
+      "Somewhat Negative"~ "-1",
+      "Neutral/No Opinion" ~ "0",
+      "Somewhat Positive" ~ "1",
+      "Strongly Positive" ~ "2"
+   ) |> as.numeric()
 }
-updateModedWFQ <- function(){
-  WFQModRule <- function(x){
-          x |> replace_values(
-          "Haven't Seen" ~ "0",
-          "Have been recomended but havent seen" ~ "1",
-          "Have seen" ~ "2",
-          "Watch Occasionally" ~ "3",
-          "Watch frequently" ~ "4"
-        ) |> as.numeric()
-  }
-  ModedWFQ <<- sheetsdata |> mutate(across(starts_with("WFQ"), WFQModRule))
+ChoiceGridModRuleB <- function(x){
+    x |> replace_values(
+      "Fully Disagree" ~ "-2",
+      "Slightly Disagree"~ "-1",
+      "Neutral" ~ "0",
+      "Slightly Agree" ~ "1",
+      "Fully Agree" ~ "2"
+    ) |> as.numeric()
 }
+AnakasticPdAssociationsModRule <- function(x){#The values for this one are difficult, these will be decided post interviews
+    a <- grepl("More Likely to do drugs",x, fixed=TRUE)
+    b <- grepl("More Violent",x, fixed=TRUE)
+    c <- grepl("Are able to self manage without therapy",x, fixed=TRUE)
+    d <- grepl("Complete tasks at a higher quality than others",x, fixed=TRUE)
+    e <- grepl("Are more book smart",x, fixed=TRUE)
+    f <- grepl("Are less street smart",x, fixed=TRUE)
+    coolvector <- c(a,b,c,d,e,f)
+    return(sum(coolvector, na.rm=TRUE))
+}
+PDTraitsModRule <- function(x){
+    a <- grepl("Impairment in interpersonal relationships",x, fixed=TRUE)
+    b <- grepl("Tendency towards manipulative behaviour, conscious or not",x, fixed=TRUE)
+    c <- grepl("Impairment in emotional stability and self-regulation, suppressive or overt",x,fixed=TRUE)
+    d <- grepl("Aggressive tenendies",x, fixed=TRUE)
+    e <- grepl("Passive tendencies",x, fixed=TRUE)
+    f <- grepl("Unusual stubbornness of beliefs",x, fixed=TRUE)
+    g <- grepl("Unusual weakness of beliefs",x, fixed=TRUE)
+    h <- (-9)*as.numeric(grepl("None of the above",x, fixed=TRUE))
+    coolvector <- c(a,b,c,d,e,f,g,h)
+    return(sum(coolvector, na.rm=TRUE))
+}
+updateModedUT <- function(){ModedUT <<- sheetsdata |> mutate(across(starts_with("UT"), UTModRule))}
+updateModedWFQ <- function(){ModedWFQ <<- sheetsdata |> mutate(across(starts_with("WFQ"), WFQModRule))}
 updateModedAcademicFQ <- function(){
   ModedAcademicFQ <<- sheetsdata |> 
     select(PDAcademicFQ) |>
@@ -123,282 +159,21 @@ updateModedAcademicFQ <- function(){
         ) |> as.numeric()
     )
 }
-updateModedPDSV <- function(){
-  
-}
-updateModedPDSV <- function(){
-  ModedPDSVCapacityToCareAboutOthers <- sheetsdata |>
-    select(PDSVCapacityToCareAboutOthers) |>
-    mutate(
-      PDSVCapacityToCareAboutOthers = PDSVCapacityToCareAboutOthers |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDSVCleanliness <- sheetsdata |>
-    select(PDSVCleanliness) |>
-    mutate(
-      PDSVCleanliness = PDSVCleanliness |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDSVSelfControl <- sheetsdata |>
-    select(PDSVSelfControl) |>
-    mutate(
-      PDSVSelfControl = PDSVSelfControl |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDSVIntelligence <- sheetsdata |>
-    select(PDSVIntelligence) |>
-    mutate(
-      PDSVIntelligence = PDSVIntelligence |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDSVEconomic <- sheetsdata |>
-    select(PDSVEconomic) |>
-    mutate(
-      PDSVEconomic = PDSVEconomic |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDSVPolitical <- sheetsdata |>
-    select(PDSVPolitical) |>
-    mutate(
-      PDSVPolitical = PDSVPolitical |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDSVViolence <- sheetsdata |>
-    select(PDSVViolence) |>
-    mutate(
-      PDSVViolence = PDSVViolence |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDSV <- bind_cols(ModedPDSVCapacityToCareAboutOthers, ModedPDSVCleanliness, ModedPDSVSelfControl, ModedPDSVIntelligence, ModedPDSVEconomic, ModedPDSVPolitical, ModedPDSVViolence)
-}
-updateModedPDPV <- function(){
-  ModedPDPVCapacityToCareAboutOthers <- sheetsdata |>
-    select(PDPVCapacityToCareAboutOthers) |>
-    mutate(
-      PDPVCapacityToCareAboutOthers = PDPVCapacityToCareAboutOthers |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDPVCleanliness <- sheetsdata |>
-    select(PDPVCleanliness) |>
-    mutate(
-      PDPVCleanliness = PDPVCleanliness |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDPVSelfControl <- sheetsdata |>
-    select(PDPVSelfControl) |>
-    mutate(
-      PDPVSelfControl = PDPVSelfControl |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDPVIntelligence <- sheetsdata |>
-    select(PDPVIntelligence) |>
-    mutate(
-      PDPVIntelligence = PDPVIntelligence |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDPVEconomic <- sheetsdata |>
-    select(PDPVEconomic) |>
-    mutate(
-      PDPVEconomic = PDPVEconomic |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDPVPolitical <- sheetsdata |>
-    select(PDPVPolitical) |>
-    mutate(
-      PDPVPolitical = PDPVPolitical |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDPVViolence <- sheetsdata |>
-    select(PDPVViolence) |>
-    mutate(
-      PDPVViolence = PDPVViolence |>
-        recode_values(
-          "Strongly Negative" ~ "-2",
-          "Somewhat Negative"~ "-1",
-          "Neutral/No Opinion" ~ "0",
-          "Somewhat Positive" ~ "1",
-          "Strongly Positive" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedPDPV <- bind_cols(ModedPDPVCapacityToCareAboutOthers, ModedPDPVCleanliness, ModedPDPVSelfControl, ModedPDPVIntelligence, ModedPDPVEconomic, ModedPDPVPolitical, ModedPDPVViolence)
-}
-updateModedDissNaPdAssociation <- function(){
-  ModedDissNaPdAssociationViolent <- sheetsdata |>
-    select(DissNaPdAssociationViolent) |>
-    mutate(
-      DissNaPdAssociationViolent = DissNaPdAssociationViolent |>
-        recode_values(
-          "Fully Disagree" ~ "-2",
-          "Slightly Disagree"~ "-1",
-          "Neutral" ~ "0",
-          "Slightly Agree" ~ "1",
-          "Fully Agree" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedDissNaPdAssociationCriminalTendency <- sheetsdata |>
-    select(DissNaPdAssociationCriminalTendency) |>
-    mutate(
-      DissNaPdAssociationCriminalTendency = DissNaPdAssociationCriminalTendency |>
-        recode_values(
-          "Fully Disagree" ~ "-2",
-          "Slightly Disagree"~ "-1",
-          "Neutral" ~ "0",
-          "Slightly Agree" ~ "1",
-          "Fully Agree" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedDissNaPdAssociationManipulative <- sheetsdata |>
-    select(DissNaPdAssociationManipulative) |>
-    mutate(
-      DissNaPdAssociationManipulative = DissNaPdAssociationManipulative |>
-        recode_values(
-          "Fully Disagree" ~ "-2",
-          "Slightly Disagree"~ "-1",
-          "Neutral" ~ "0",
-          "Slightly Agree" ~ "1",
-          "Fully Agree" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedDissNaPdAssociationCapabaleofkindness <- sheetsdata |>
-    select(DissNaPdAssociationCapabaleofkindness) |>
-    mutate(
-      DissNaPdAssociationCapabaleofkindness = DissNaPdAssociationCapabaleofkindness |>
-        recode_values(
-          "Fully Disagree" ~ "-2",
-          "Slightly Disagree"~ "-1",
-          "Neutral" ~ "0",
-          "Slightly Agree" ~ "1",
-          "Fully Agree" ~ "2"
-        ) |> as.numeric()
-    )
-  ModedDissNaPdAssociationAbleToSelfManage <- sheetsdata |>
-    select(DissNaPdAssociationAbleToSelfManage) |>
-    mutate(
-      DissNaPdAssociationAbleToSelfManage = DissNaPdAssociationAbleToSelfManage |>
-        recode_values(
-          "Fully Disagree" ~ "-2",
-          "Slightly Disagree"~ "-1",
-          "Neutral" ~ "0",
-          "Slightly Agree" ~ "1",
-          "Fully Agree" ~ "2"
-        ) |> as.numeric()
-    )
-
-  ModedDissNaPdAssociation <- bind_cols(ModedDissNaPdAssociationViolent, ModedDissNaPdAssociationCriminalTendency, ModedDissNaPdAssociationManipulative, ModedDissNaPdAssociationCapabaleofkindness, ModedDissNaPdAssociationAbleToSelfManage)
-}
+updateModedPDSV <- function(){ModedPDSV <<- sheetsdata |> mutate(across(contains("PDSV"), ChoiceGridModRuleA))}
+updateModedPDPV <- function(){ModedPDPV <<- sheetsdata |> mutate(across(contains("PDPV"), ChoiceGridModRuleA))}
+updateModedDissNaPdAssociation <- function(){ModedDissNaPdAssociation <<- sheetsdata |> mutate(across(contains("DissNaPdAssociation"), ChoiceGridModRuleB))}
 updateModedAnakasticPdAssociations <- function(){
-  AnakasticPdAssociationsModRule <- function(x){#The values for this one are difficult, these will be decided post interviews
-    a <- grepl("More Likely to do drugs",x, fixed=TRUE)
-    b <- grepl("More Violent",x, fixed=TRUE)
-    c <- grepl("Are able to self manage without therapy",x, fixed=TRUE)
-    d <- grepl("Complete tasks at a higher quality than others",x, fixed=TRUE)
-    e <- grepl("Are more book smart",x, fixed=TRUE)
-    f <- grepl("Are less street smart",x, fixed=TRUE)
-    coolvector <- c(a,b,c,d,e,f)
-    return(sum(coolvector, na.rm=TRUE))
-                    }
-  sheetsdata |>
-    select(AnakasticPdAssociationsCheckbox) |>
-    rowwise() |> mutate(AnakasticPdAssociationsCheckbox = AnakasticPdAssociationsCheckbox %>% AnakasticPdAssociationsModRule(.))
+    ModedAnakasticPdAssociations <<- sheetsdata |>
+      select(AnakasticPdAssociationsCheckbox) |>
+      rowwise() |> mutate(AnakasticPdAssociationsCheckbox = AnakasticPdAssociationsCheckbox %>% AnakasticPdAssociationsModRule(.))
 }
 updateModedPDTraits <- function(){
-  rule <- function(x){#The values for this one are difficult, these will be decided post interviews
-    a <- grepl("Impairment in interpersonal relationships",x, fixed=TRUE)
-    b <- grepl("Tendency towards manipulative behaviour, conscious or not",x, fixed=TRUE)
-    c <- grepl("Impairment in emotional stability and self-regulation, suppressive or overt",x,fixed=TRUE)
-    d <- grepl("Aggressive tenendies",x, fixed=TRUE)
-    e <- grepl("Passive tendencies",x, fixed=TRUE)
-    f <- grepl("Unusual stubbornness of beliefs",x, fixed=TRUE)
-    g <- grepl("Unusual weakness of beliefs",x, fixed=TRUE)
-    h <- (-9)*as.numeric(grepl("None of the above",x, fixed=TRUE))
-    coolvector <- c(a,b,c,d,e,f,g,h)
-    return(sum(coolvector, na.rm=TRUE))
-}
-  sheetsdata |>
+  ModedPDTraits <<- sheetsdata |>
     select(PDTraitsCheckbox) |>
-    rowwise() |> mutate(PDTraitsCheckbox = PDTraitsCheckbox %>% rule(.))
+    rowwise() |> mutate(PDTraitsCheckbox = PDTraitsCheckbox %>% PDTriatsModRule(.))
 }
-
 updateModedBipolarRecognition <- function(){
-  sheetsdata |>
+  ModedBipolarRecognition <<- sheetsdata |>
     select(BipolarRecognition) |>
     mutate(
       BipolarRecognition = BipolarRecognition |> replace_values(
@@ -410,7 +185,7 @@ updateModedBipolarRecognition <- function(){
     )
 }
 updateModedBPDRecognition <- function(){
-  sheetsdata |>
+  ModedBPDRecognition <<- sheetsdata |>
     select(BPDRecognition) |>
     mutate(
       BPDRecognition = BPDRecognition |> replace_values(
@@ -422,7 +197,7 @@ updateModedBPDRecognition <- function(){
     )
 }
 updateModedGeneralPDRecognition <- function(){
-  sheetsdata |>
+  ModedGeneralPDRecognition <<- sheetsdata |>
     select(GeneralPDRecognition) |>
     mutate(
       GeneralPDRecognition = GeneralPDRecognition |> replace_values(
@@ -434,24 +209,24 @@ updateModedGeneralPDRecognition <- function(){
     )
 }
 updateModedParts <- function(){
-  ModedUT <<- updateModedUT()
-  ModedWFQ <<- updateModedWFQ()
-  ModedPDSV <<- updateModedPDSV()
-  ModedPDPV <<-updateModedPDPV()
-  ModedDissNaPdAssociation <<- updateModedDissNaPdAssociation()
-  ModedAnakasticPdAssociations <<- updateModedAnakasticPdAssociations()
-  ModedPDTraits <<- updateModedPDTraits()
-  ModedBipolarRecognition <<- updateModedBipolarRecognition()
-  ModedBPDRecognition <<- updateModedBPDRecognition()
-  ModedGeneralPDRecognition <<- updateModedGeneralPDRecognition()
+  updateModedUT()
+  updateModedWFQ()
+  updateModedPDSV()
+  updateModedPDPV()
+  updateModedDissNaPdAssociation()
+  updateModedAnakasticPdAssociations()
+  updateModedPDTraits()
+  updateModedBipolarRecognition()
+  updateModedBPDRecognition()
+  updateModedGeneralPDRecognition()
 }
 updateModedPartsCompliation <- function(){
-  updateModedParts()
   ModedPartsCompilation <<- bind_cols(ModedUT,ModedWFQ,ModedPDSV,ModedPDPV,ModedDissNaPdAssociation,ModedAnakasticPdAssociations,ModedPDTraits,ModedBipolarRecognition,ModedBPDRecognition,ModedGeneralPDRecognition)
 }
 updatekeepBetweenSheets <- function(){
   keepBetweenSheets <<- bind_cols(select(sheetsdata,Country), select(sheetsdata,Gender), sheetsdata[, !sapply(sheetsdata, is.character)])}
 updateModedSheet <- function(){
+  updateModedParts()
   updateModedPartsCompliation()
   updatekeepBetweenSheets()
   ModedSheet <<- bind_cols(keepbBetweenSheets, ModedPartsCompilation)
