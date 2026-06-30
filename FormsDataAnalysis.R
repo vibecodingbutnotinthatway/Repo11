@@ -82,7 +82,7 @@ The categories for different personality disorders (e.g. borderline personality 
 )
 #Mod Rules list
 UTModRule <- function(x){
-  x |> replace_values(
+  x |> recode_values(
     "Dont Use" ~ "0",
     "Less than 1 hour" ~ "0.5",
     "Less than 3 hours" ~ "1",
@@ -94,7 +94,7 @@ UTModRule <- function(x){
   ) |> as.numeric()
 }
 WFQModRule <- function(x){
-  x |> replace_values(
+  x |> recode_values(
       "Haven't Seen" ~ "0",
       "Have been recomended but havent seen" ~ "1",
       "Have seen" ~ "2",
@@ -103,7 +103,7 @@ WFQModRule <- function(x){
     ) |> as.numeric()
   }
 ChoiceGridModRuleA <- function(x){
-  x |> replace_values(
+  x |> recode_values(
       "Strongly Negative" ~ "-2",
       "Somewhat Negative"~ "-1",
       "Neutral/No Opinion" ~ "0",
@@ -112,7 +112,7 @@ ChoiceGridModRuleA <- function(x){
    ) |> as.numeric()
 }
 ChoiceGridModRuleB <- function(x){
-    x |> replace_values(
+    x |> recode_values(
       "Fully Disagree" ~ "-2",
       "Slightly Disagree"~ "-1",
       "Neutral" ~ "0",
@@ -176,7 +176,7 @@ updateModedBipolarRecognition <- function(){
   ModedBipolarRecognition <<- sheetsdata |>
     select(BipolarRecognition) |>
     mutate(
-      BipolarRecognition = BipolarRecognition |> replace_values(
+      BipolarRecognition = BipolarRecognition |> recode_values(
         "A) Bipolar Disorder" ~ "1",
         "B) A Personality Disorder" ~ "0",
         "C) A Neurological Disorder" ~ "0",
@@ -188,7 +188,7 @@ updateModedBPDRecognition <- function(){
   ModedBPDRecognition <<- sheetsdata |>
     select(BPDRecognition) |>
     mutate(
-      BPDRecognition = BPDRecognition |> replace_values(
+      BPDRecognition = BPDRecognition |> recode_values(
         "A) Borderline Personality Disorder" ~ "1",
         "B) Narcissistic Personality Disorder" ~ "0.5",
         "C) A different, or generalised, Personality Disorder" ~ "0.5",
@@ -200,7 +200,7 @@ updateModedGeneralPDRecognition <- function(){
   ModedGeneralPDRecognition <<- sheetsdata |>
     select(GeneralPDRecognition) |>
     mutate(
-      GeneralPDRecognition = GeneralPDRecognition |> replace_values(
+      GeneralPDRecognition = GeneralPDRecognition |> recode_values(
         "A) The patient sufficiently meets the criteria for a personality disorder" ~ "1",
         "B) The patient's symptoms are due to external factors, like workplace stress" ~ "0",
         "C) The patient has suffered from a stroke prior to the development of behaviours and was left untreated" ~ "0",
