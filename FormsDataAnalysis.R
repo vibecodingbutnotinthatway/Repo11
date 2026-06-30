@@ -82,11 +82,8 @@ The categories for different personality disorders (e.g. borderline personality 
 )
 
 updateModedUT <- function(){
-  ModedUTInstagram <- sheetsdata |>
-  select(UTInstagram) |>
-  mutate(
-    UTInstagram = UTInstagram |>
-    replace_values(
+  UTModRule <- function(x){
+    x |> replace_values(
       "Dont Use" ~ "0",
       "Less than 1 hour" ~ "0.5",
       "Less than 3 hours" ~ "1",
@@ -96,205 +93,23 @@ updateModedUT <- function(){
       "Less than 10 hours" ~ "9",
       "Atleast 10 hours" ~ "10"
     ) |> as.numeric()
-  )
-ModedUTYoutube <- sheetsdata |>
-  select(UTYoutube) |>
-  mutate(
-    UTYoutube = UTYoutube |>
-    replace_values(
-      "Dont Use" ~ "0",
-      "Less than 1 hour" ~ "0.5",
-      "Less than 3 hours" ~ "1",
-      "Less than 5 hours" ~ "3",
-      "Less than 7 hours" ~ "5",
-      "Less than 9 hours" ~ "7",
-      "Less than 10 hours" ~ "9",
-      "Atleast 10 hours" ~ "10"
-    ) |> as.numeric()
-  )
-ModedUTTikTok <- sheetsdata |>
-  select(UTTikTok) |>
-  mutate(
-    UTTikTok = UTTikTok |>
-    replace_values(
-      "Dont Use" ~ "0",
-      "Less than 1 hour" ~ "0.5",
-      "Less than 3 hours" ~ "1",
-      "Less than 5 hours" ~ "3",
-      "Less than 7 hours" ~ "5",
-      "Less than 9 hours" ~ "7",
-      "Less than 10 hours" ~ "9",
-      "Atleast 10 hours" ~ "10"
-    ) |> as.numeric()
-  )
-ModedUTTumblr <- sheetsdata |>
-  select(UTTumblr) |>
-  mutate(
-    UTTumblr = UTTumblr |>
-    replace_values(
-      "Dont Use" ~ "0",
-      "Less than 1 hour" ~ "0.5",
-      "Less than 3 hours" ~ "1",
-      "Less than 5 hours" ~ "3",
-      "Less than 7 hours" ~ "5",
-      "Less than 9 hours" ~ "7",
-      "Less than 10 hours" ~ "9",
-      "Atleast 10 hours" ~ "10"
-    ) |> as.numeric()
-  )
-ModedUTFacebook <- sheetsdata |>
-  select(UTFacebook) |>
-  mutate(
-    UTFacebook = UTFacebook |>
-    replace_values(
-      "Dont Use" ~ "0",
-      "Less than 1 hour" ~ "0.5",
-      "Less than 3 hours" ~ "1",
-      "Less than 5 hours" ~ "3",
-      "Less than 7 hours" ~ "5",
-      "Less than 9 hours" ~ "7",
-      "Less than 10 hours" ~ "9",
-      "Atleast 10 hours" ~ "10"
-    ) |> as.numeric()
-  )
-ModedUTTwitter <- sheetsdata |>
-  select(UTTwitter) |>
-  mutate(
-    UTTwitter = UTTwitter |>
-    replace_values(
-      "Dont Use" ~ "0",
-      "Less than 1 hour" ~ "0.5",
-      "Less than 3 hours" ~ "1",
-      "Less than 5 hours" ~ "3",
-      "Less than 7 hours" ~ "5",
-      "Less than 9 hours" ~ "7",
-      "Less than 10 hours" ~ "9",
-      "Atleast 10 hours" ~ "10"
-    ) |> as.numeric()
-  )
-ModedUTReddit <- sheetsdata |>
-  select(UTReddit) |>
-  mutate(
-    UTReddit = UTReddit |>
-    replace_values(
-      "Dont Use" ~ "0",
-      "Less than 1 hour" ~ "0.5",
-      "Less than 3 hours" ~ "1",
-      "Less than 5 hours" ~ "3",
-      "Less than 7 hours" ~ "5",
-      "Less than 9 hours" ~ "7",
-      "Less than 10 hours" ~ "9",
-      "Atleast 10 hours" ~ "10"
-    ) |> as.numeric()
-  )
-ModedUT4chan <- sheetsdata |>
-  select(UT4chan) |>
-  mutate(
-    UT4chan = UT4chan |>
-    replace_values(
-      "Dont Use" ~ "0",
-      "Less than 1 hour" ~ "0.5",
-      "Less than 3 hours" ~ "1",
-      "Less than 5 hours" ~ "3",
-      "Less than 7 hours" ~ "5",
-      "Less than 9 hours" ~ "7",
-      "Less than 10 hours" ~ "9",
-      "Atleast 10 hours" ~ "10"
-    ) |> as.numeric()
-  )
-  ModedUT <- bind_cols(ModedUTInstagram,ModedUTYoutube,ModedUTTikTok,ModedUTTumblr,ModedUTFacebook, ModedUTTwitter, ModedUTReddit, ModedUT4chan)
-  #return(ModedUT)
+  }
+  ModedUT <<- sheetsdata |> mutate(across(starts_with("UT"), UTModRule))
 }
 updateModedWFQ <- function(){
-  ModedWFQPsych2Go <- sheetsdata |>
-    select(WFQPsych2Go) |>
-    mutate(
-      WFQPsych2Go = WFQPsych2Go|> 
-        replace_values(
+  WFQModRule <- function(x){
+          x |> replace_values(
           "Haven't Seen" ~ "0",
           "Have been recomended but havent seen" ~ "1",
           "Have seen" ~ "2",
           "Watch Occasionally" ~ "3",
           "Watch frequently" ~ "4"
         ) |> as.numeric()
-    ) 
-  ModedWFQHealthyGamerGG <- sheetsdata |>
-    select(WFQHealthyGamerGG) |>
-    mutate(
-      WFQHealthyGamerGG = WFQHealthyGamerGG|> 
-        replace_values(
-          "Haven't Seen" ~ "0",
-          "Have been recomended but havent seen" ~ "1",
-          "Have seen" ~ "2",
-          "Watch Occasionally" ~ "3",
-          "Watch frequently" ~ "4"
-        ) |> as.numeric()
-    )
-  ModedWFQCrashCourse <- sheetsdata |>
-    select(WFQCrashCourse) |>
-    mutate(
-      WFQCrashCourse = WFQCrashCourse|> 
-        replace_values(
-          "Haven't Seen" ~ "0",
-          "Have been recomended but havent seen" ~ "1",
-          "Have seen" ~ "2",
-          "Watch Occasionally" ~ "3",
-          "Watch frequently" ~ "4"
-        ) |> as.numeric()
-    )
-  ModedWFQKhanAcademy <- sheetsdata |>
-    select(WFQKhanAcademy) |>
-    mutate(
-      WFQKhanAcademy = WFQKhanAcademy|> 
-        replace_values(
-          "Haven't Seen" ~ "0",
-          "Have been recomended but havent seen" ~ "1",
-          "Have seen" ~ "2",
-          "Watch Occasionally" ~ "3",
-          "Watch frequently" ~ "4"
-        ) |> as.numeric()
-    ) 
-  ModedWFQDirtyMedicine <- sheetsdata |>
-    select(WFQDirtyMedicine) |>
-    mutate(
-      WFQDirtyMedicine = WFQDirtyMedicine|> 
-        replace_values(
-          "Haven't Seen" ~ "0",
-          "Have been recomended but havent seen" ~ "1",
-          "Have seen" ~ "2",
-          "Watch Occasionally" ~ "3",
-          "Watch frequently" ~ "4"
-        ) |> as.numeric()
-    ) 
-  ModedWFQPracticalPsychology <- sheetsdata |>
-    select(WFQPracticalPsychology) |>
-    mutate(
-      WFQPracticalPsychology = WFQPracticalPsychology|> 
-        replace_values(
-          "Haven't Seen" ~ "0",
-          "Have been recomended but havent seen" ~ "1",
-          "Have seen" ~ "2",
-          "Watch Occasionally" ~ "3",
-          "Watch frequently" ~ "4"
-        ) |> as.numeric()
-    ) 
-  ModedWFQMemorablePsychology <- sheetsdata |>
-    select(WFQMemorablePsychology) |>
-    mutate(
-      WFQMemorablePsychology = WFQMemorablePsychology|> 
-        replace_values(
-          "Haven't Seen" ~ "0",
-          "Have been recomended but havent seen" ~ "1",
-          "Have seen" ~ "2",
-          "Watch Occasionally" ~ "3",
-          "Watch frequently" ~ "4"
-        ) |> as.numeric()
-    )
-    ModedWFQ <- bind_cols(ModedWFQPsych2Go, ModedWFQHealthyGamerGG, ModedWFQCrashCourse, ModedWFQKhanAcademy, ModedWFQDirtyMedicine, ModedWFQPracticalPsychology, ModedWFQMemorablePsychology)
-    #return(ModedWFQ)
+  }
+  ModedWFQ <<- sheetsdata |> mutate(across(starts_with("WFQ"), WFQModRule))
 }
 updateModedAcademicFQ <- function(){
-  sheetsdata |> 
+  ModedAcademicFQ <<- sheetsdata |> 
     select(PDAcademicFQ) |>
     mutate(
       PDAcademicFQ = PDAcademicFQ |>
@@ -307,6 +122,9 @@ updateModedAcademicFQ <- function(){
           "Dont Know" ~ "0"
         ) |> as.numeric()
     )
+}
+updateModedPDSV <- function(){
+  
 }
 updateModedPDSV <- function(){
   ModedPDSVCapacityToCareAboutOthers <- sheetsdata |>
@@ -547,7 +365,7 @@ updateModedDissNaPdAssociation <- function(){
   ModedDissNaPdAssociation <- bind_cols(ModedDissNaPdAssociationViolent, ModedDissNaPdAssociationCriminalTendency, ModedDissNaPdAssociationManipulative, ModedDissNaPdAssociationCapabaleofkindness, ModedDissNaPdAssociationAbleToSelfManage)
 }
 updateModedAnakasticPdAssociations <- function(){
-  rule <- function(x){#The values for this one are difficult, these will be decided post interviews
+  AnakasticPdAssociationsModRule <- function(x){#The values for this one are difficult, these will be decided post interviews
     a <- grepl("More Likely to do drugs",x, fixed=TRUE)
     b <- grepl("More Violent",x, fixed=TRUE)
     c <- grepl("Are able to self manage without therapy",x, fixed=TRUE)
@@ -559,7 +377,7 @@ updateModedAnakasticPdAssociations <- function(){
                     }
   sheetsdata |>
     select(AnakasticPdAssociationsCheckbox) |>
-    rowwise() |> mutate(AnakasticPdAssociationsCheckbox = AnakasticPdAssociationsCheckbox %>% rule(.))
+    rowwise() |> mutate(AnakasticPdAssociationsCheckbox = AnakasticPdAssociationsCheckbox %>% AnakasticPdAssociationsModRule(.))
 }
 updateModedPDTraits <- function(){
   rule <- function(x){#The values for this one are difficult, these will be decided post interviews
