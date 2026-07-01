@@ -93,6 +93,17 @@ UTModRule <- function(x){
     "Atleast 10 hours" ~ "10"
   ) |> as.numeric()
 }
+UTModRule <- tribble(
+  ~from , ~to              ,
+  "Dont Use" ~ "0",
+  "Less than 1 hour" ~ "0.5",
+  "Less than 3 hours" ~ "1",
+  "Less than 5 hours" ~ "3",
+  "Less than 7 hours" ~ "5",
+  "Less than 9 hours" ~ "7",
+  "Less than 10 hours" ~ "9",
+  "Atleast 10 hours" ~ "10"
+)
 WFQModRule <- function(x){
   x |> recode_values(
       "Haven't Seen" ~ "0",
@@ -142,7 +153,11 @@ PDTraitsModRule <- function(x){
     coolvector <- c(a,b,c,d,e,f,g,h)
     return(sum(coolvector, na.rm=TRUE))
 }
-updateModedUT <- function(){ModedUT <<- sheetsdata |> mutate(across(starts_with("UT"), UTModRule))}
+updateModedUT <- function(){
+    ModedUT <<- sheetsdata |> mutate(
+    replace_values( across(starts_with("UT")) , from = ModedUT$from , to = ModedUT$to ) |> as.numeric()
+  )
+}
 updateModedWFQ <- function(){ModedWFQ <<- sheetsdata |> mutate(across(starts_with("WFQ"), WFQModRule))}
 updateModedAcademicFQ <- function(){
   ModedAcademicFQ <<- sheetsdata |> 
